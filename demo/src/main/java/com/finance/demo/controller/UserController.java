@@ -49,6 +49,11 @@ public class UserController {
         return userService.update(id, request);
     }
 
+    @PatchMapping("/{id}/toggle-status")
+    public UserResponse toggleStatus(@PathVariable Integer id) {
+        return userService.toggleStatus(id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivate(@PathVariable Integer id) {

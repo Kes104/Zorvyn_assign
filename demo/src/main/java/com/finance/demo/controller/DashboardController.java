@@ -4,10 +4,8 @@ import com.finance.demo.dto.DashboardSummaryResponse;
 import com.finance.demo.dto.TrendPoint;
 import com.finance.demo.service.DashboardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,19 +20,12 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    public DashboardSummaryResponse summary(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-            @RequestParam(required = false) Integer createdBy
-    ) {
-        return dashboardService.getSummary(start, end, createdBy);
+    public DashboardSummaryResponse summary() {
+        return dashboardService.getSummary(null, null, null);
     }
 
     @GetMapping("/trends")
-    public List<TrendPoint> trends(
-            @RequestParam(defaultValue = "6") int months,
-            @RequestParam(required = false) Integer createdBy
-    ) {
-        return dashboardService.getMonthlyTrends(months, createdBy);
+    public List<TrendPoint> trends() {
+        return dashboardService.getMonthlyTrends(6, null);
     }
 }

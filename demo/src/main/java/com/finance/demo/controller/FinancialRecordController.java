@@ -1,15 +1,12 @@
 package com.finance.demo.controller;
 import com.finance.demo.dto.FinancialRecordRequest;
 import com.finance.demo.dto.FinancialRecordResponse;
-import com.finance.demo.model.RecordType;
 import com.finance.demo.service.FinancialRecordService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.format.annotation.DateTimeFormat;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,13 +27,8 @@ public class FinancialRecordController {
     }
 
     @GetMapping
-    public List<FinancialRecordResponse> getAll(
-            @RequestParam(required = false) RecordType type,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) Integer createdBy,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        return service.getAllRecords(type, category, start, end, createdBy);
+    public List<FinancialRecordResponse> getAll() {
+        return service.getAllRecords(null, null, null, null, null);
     }
 
     @GetMapping("/{id}")

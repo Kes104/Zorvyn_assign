@@ -50,7 +50,15 @@ public class AuthService {
             throw new BadRequestException("Email already exists");
         }
 
-        Role assignedRole = userRepository.count() == 0 ? Role.ADMIN : Role.VIEWER;
+        String requestedRole = request.role();
+        Role parsedRole = Role.from(requestedRole, null);
+        if (requestedRole != null && !requestedRole.isBlank() && parsedRole == null) {
+            throw new BadRequestException("Invalid role. Allowed: ADMIN, ANALYST, VIEWER");
+        }
+
+        Role assignedRole = (parsedRole != null)
+                ? parsedRole
+                : (userRepository.count() == 0 ? Role.ADMIN : Role.VIEWER);
         User user = new User(
                 request.name().trim(),
                 normalizedEmail,

@@ -5,6 +5,9 @@ import com.finance.demo.model.RecordType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.criteria.Predicate;
 
 public final class FinancialRecordSpecifications {
 
@@ -19,26 +22,29 @@ public final class FinancialRecordSpecifications {
             Integer createdBy
     ) {
         return (root, query, builder) -> {
-            var predicates = builder.conjunction();
+            List<Predicate> predicates = new ArrayList<>();
 
             if (type != null) {
-                predicates.getExpressions().add(builder.equal(root.get("type"), type));
+                predicates.add(builder.equal(root.get("type"), type));
             }
             if (category != null && !category.isBlank()) {
-                predicates.getExpressions().add(builder.equal(root.get("category"), category));
+                predicates.add(builder.equal(root.get("category"), category));
             }
             if (createdBy != null) {
-                predicates.getExpressions().add(builder.equal(root.get("createdBy"), createdBy));
+                predicates.add(builder.equal(root.get("createdBy"), createdBy));
             }
             if (startDate != null && endDate != null) {
-                predicates.getExpressions().add(builder.between(root.get("date"), startDate, endDate));
+                predicates.add(builder.between(root.get("date"), startDate, endDate));
             } else if (startDate != null) {
-                predicates.getExpressions().add(builder.greaterThanOrEqualTo(root.get("date"), startDate));
+                predicates.add(builder.greaterThanOrEqualTo(root.get("date"), startDate));
             } else if (endDate != null) {
-                predicates.getExpressions().add(builder.lessThanOrEqualTo(root.get("date"), endDate));
+                predicates.add(builder.lessThanOrEqualTo(root.get("date"), endDate));
             }
 
-            return predicates;
+            if (predicates.isEmpty()) {
+                return builder.conjunction();
+            }
+            return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

@@ -93,10 +93,18 @@ public class UserService {
     }
 
     public void deactivate(Integer id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        userRepository.deleteById(id);
+    }
+
+    public UserResponse toggleStatus(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        user.setStatus(UserStatus.INACTIVE);
-        userRepository.save(user);
+        user.setStatus(user.getStatus() == UserStatus.ACTIVE ? UserStatus.INACTIVE : UserStatus.ACTIVE);
+        User saved = userRepository.save(user);
+        return toResponse(saved);
     }
 
     private UserResponse toResponse(User user) {

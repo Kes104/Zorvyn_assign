@@ -53,6 +53,7 @@ public class FinancialRecordService {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new BadRequestException("Start date cannot be after end date");
         }
+        
         return repository.findAll(FinancialRecordSpecifications.withFilters(type, category, startDate, endDate, createdBy))
                 .stream()
                 .map(this::toResponse)

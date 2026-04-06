@@ -31,11 +31,11 @@ public class User{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserStatus status;
-    // Default constructor (REQUIRED by JPA)
+    // Default constructor
     public User() {
     }
 
-// Constructor matching your fields
+//  Defining a constructor suiting my needs
     public User(String name, String email, String password, Role role, UserStatus status) {
         this.name = name;
         this.email = email;
